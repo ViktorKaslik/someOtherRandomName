@@ -1,0 +1,2 @@
+Ants should be stored in hash map (the key being its ID and value being the ant object)
+Vik will build placeAnt function (which is passed the hash map above)
