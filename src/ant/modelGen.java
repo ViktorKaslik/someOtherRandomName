@@ -1,5 +1,6 @@
 package ant;
 
+import java.util.HashMap;
 import java.util.Random;
 
 /*
@@ -19,38 +20,46 @@ import java.util.Random;
 //11 food blobs ( a blob is a 5x5 square of food cells, each cell contains 5 food)  #DONE
 //all elements can have orientation changed
 public class modelGen {
-    private int[][] multi;
+    private int[][] boardModel;
     
     /**
      * Generates a random map according to set rules
      */
     public modelGen(){
         int x,y;
-        x=150;
-        y=150;
-        multi = new int[y][x];
+        x=150;//150
+        y=150;//150
+        boardModel = new int[y][x];
         for(int i = 0; i<y; i++){
             for(int ii =0; ii<x; ii++){
                 if(ii==0 || i==0 || ii==x-1 || i==y-1)
-                    multi[i][ii]= 1;
+                    boardModel[i][ii]= 1;
                 else
-                    multi[i][ii]= 4;
+                    boardModel[i][ii]= 4;
             }
         }
         
-        System.out.println("1");
-        multi = antHills(multi,7);
-        multi = food(multi);
-        multi = rocks(multi);
-        Board b = new Board(multi,8);
+        //System.out.println("1");
+        boardModel = antHills(boardModel,7);
+        boardModel = food(boardModel);
+        boardModel = rocks(boardModel);
+        
+        Ant a = new Ant(1,2);
+        a.setCoord(7, 7);
+        HashMap<Integer,Ant> ants = new HashMap<Integer,Ant>();
+        ants.put(1,a);
+        
+        //Board b = new Board(boardModel,5,ants);//8
     }
+    
+    public int[][] getBoard(){return boardModel;}
     
     /**
      * places the 2 ant hills
      * @param matrix the 2d int array containing the world
      * @return the 2d int array with the ant hills placed on it
      */
-    public int[][] antHills(int[][] matrix, int de){
+    private int[][] antHills(int[][] matrix, int de){
         //top left must be min 2 away from L edge
         //top left must be min 7 away from R edge
         //top must be must 9 from bottom
@@ -88,6 +97,7 @@ public class modelGen {
                 i+=1;
             }
         }
+
         return matrix;
     }
     
@@ -98,7 +108,7 @@ public class modelGen {
      * @param dir direction of adjacent tile
      * @return an int array in the form [x,y]
      */
-    public int[] adjacent_cell(int x, int y, int dir){
+    public int[] adjacent_cell(int x, int y, int dir){ // may make static???
         
         if(y%2 == 0){
             if(dir == 0){ x=x+1; }
@@ -126,7 +136,7 @@ public class modelGen {
      * @param matrix the 2d int array containing the world
      * @return boolean true if clear, false otherwise
      */
-    public boolean antIsClear(int x, int y, int[][] matrix, int de){///////////////////////////needs fixing
+    private boolean antIsClear(int x, int y, int[][] matrix, int de){
         //increase to 7x7
         boolean pass= true;
         for(int yy=(y-1); yy<(y+((de*2)+2)); yy++){
@@ -145,7 +155,7 @@ public class modelGen {
      * @param matrix the 2d int array containing the world
      * @return the 2d int array containing the world with the food added
      */
-    public int[][] food(int[][] matrix){
+    private int[][] food(int[][] matrix){
         //11 blobs
         //5x5 block
         //food id=9
@@ -196,7 +206,7 @@ public class modelGen {
      * @param matrix the 2d int array containing the world
      * @return the 2d int array containing the world with the rocks added
      */
-    public int[][] rocks(int[][] matrix){
+    private int[][] rocks(int[][] matrix){// This function is what throws the array out of bounds exception (add in fix i.e. if x||y on boundry dont -1 or +2 to the array)
         //rocks can be adjacent to other rocks but atleast 1 free space between them and other cells (bar ground)
         //a rock is a set of adjacent rock cells
         //if rock is adjacent to another rock dont increment/decrement rock counter
@@ -212,8 +222,8 @@ public class modelGen {
                 yIn = randInt(1,height-1);
             }
             
-            if(!rockAdjacentToRock(xIn,yIn,matrix)){i+=1;}
-            System.out.println(yIn + " "+xIn + " "+i);
+            if(!rockAdjacentToRock(xIn,yIn,matrix)){i+=1;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
+            //System.out.println(yIn + " "+xIn + " "+i);
             size = randInt(4,15);
             for(int x=xIn; x<xIn+size; x++){
                 for(int y=yIn; y<yIn+size; y++){
@@ -241,8 +251,8 @@ public class modelGen {
         if(x+size+2 > w || x < 1){ return false;}
         if(matrix[y][x] != 4){ return false;}
         try{
-            for(int xx = x-1; xx<(x+size+1); xx++){
-                for(int yy = y-1; yy<(y+size+1); yy++){
+            for(int xx = x-2; xx<(x+size+3); xx++){
+                for(int yy = y-2; yy<(y+size+3); yy++){
                 //System.out.println(" "+y+" "+xx);
                     if(matrix[yy][xx] == 2 || matrix[yy][xx] == 3 || matrix[yy][xx] > 4){ pass = false; }
                 }
@@ -251,7 +261,7 @@ public class modelGen {
         return pass;
     }
     
-    public boolean rockAdjacentToRock(int xIn, int yIn, int[][] matrix){
+    private boolean rockAdjacentToRock(int xIn, int yIn, int[][] matrix){
         boolean pass= false;
         int h = matrix.length;
         int w = matrix[1].length;
@@ -274,7 +284,7 @@ public class modelGen {
      * @param max value of int
      * @return a random int in range (min,max)
      */
-    public static int randInt(int min, int max) {
+    private static int randInt(int min, int max) {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
 
@@ -283,7 +293,7 @@ public class modelGen {
     
     
     //////debugging help
-    public void print(int[][] A){
+    private void print(int[][] A){
         int h=A.length;
         int w=A[1].length;
         

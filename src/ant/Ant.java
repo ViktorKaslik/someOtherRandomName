@@ -15,6 +15,8 @@ public class Ant {
     private int state;
     private int resting;
     private int direction;
+    private int xCoord;
+    private int yCoord;
     private boolean hasFood;
     
     /**
@@ -41,12 +43,27 @@ public class Ant {
     public int getColor() { return color; }
 
     public int getState() { return state; }
+    public void setState(int s) { state = s;}
+
 
     public int getResting() { return resting; }
+    public void setResting(int rest) {resting = rest;}
 
     public int getDirection() { return direction; }
+    public void setDirection(int dir){direction=dir;}
 
-    public boolean isHasFood() { return hasFood; }
+    public boolean HasFood() { return hasFood; }
+    public void setHasFood(boolean hf){hasFood = hf;}
+    
+    /**
+     * gets an ants coordinates
+     * @return int[]{x,y}
+     */
+    public int[] getCoord(){return new int[]{xCoord,yCoord};}
+    public void setCoord(int x,int y){xCoord = x; yCoord = y;}
+
+
+    
     
         
 }
