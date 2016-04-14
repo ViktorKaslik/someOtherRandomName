@@ -177,6 +177,61 @@ public class GameModel {
         ants.put(a.getId(), null); //kill ant
         set_food_at(coord[0],coord[1],food_at(coord[0],coord[1])+3); //adds 3 to food at coords
     }
+    
+    public void step(int id){
+        if(ant_is_alive(id)){
+            Ant ant = ants.get(id);
+            if(ant.getResting() > 0){
+                ant.setResting(ant.getResting()-1);
+            }
+            else{
+                //getInstruction
+                /*switch get_instruction(color(a), state(a)) of
+                    case Sense(sensedir, st1, st2, cond):
+                    let p' = sensed_cell(p, direction(a), sensedir) in
+                    let st = if cell_matches(p', cond, color(a)) then st1 else st2 in
+                    set_state(a, st)
+                    case Mark(i, st):
+                    set_marker_at(p, color(a), i);
+                    set_state(a, st)
+                    case Unmark(i, st):
+                    clear_marker_at(p, color(a), i);
+                    set_state(a, st)
+                    case PickUp(st1, st2):
+                    if has_food(a) || food_at(p) = 0 then
+                    set_state(a, st2)
+                    else begin
+                    set_food_at(p, food_at(p) - 1);
+                    set_has_food(a, true);
+                    set_state(a, st1)
+                    end
+                    case Drop(st):
+                    if has_food(a) then begin
+                    set_food_at(p, food_at(p) + 1);
+                    set_has_food(a, false)
+                    end;
+                    set_state(a, st)
+                    case Turn(lr, st):
+                    set_direction(a, turn(lr, direction(a)));
+                    set_state(a, st)
+                    case Move(st1, st2):
+                    let newp = adjacent_cell(p, direction(a)) in
+                    if rocky(newp) || some_ant_is_at(newp) then
+                    set_state(a, st2)
+                    else begin
+                    clear_ant_at(p);
+                    set_ant_at(newp, a);
+                    set_state(a, st1);
+                    set_resting(a, 14);
+                    check_for_surrounded_ants(newp)
+                    end
+                    case Flip(n, st1, st2):
+                    let st = if randomintno = 0 then st1 else st2 in
+                    set_state(a, st)*/
+            }
+        }
+    }
+    
     /*
     sensed_cell(p:pos, d:dir, sd:sense_dir):pos
     set_ant_at(pos,ant):void
@@ -187,7 +242,7 @@ public class GameModel {
     check_any_marker_at(pos,color):bool
     cell_matches(pos,con,color):bool
     get_instruction(color,state):instruction
-    step(id): void*/
+    */
 
 
     /**
