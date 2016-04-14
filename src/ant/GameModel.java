@@ -8,6 +8,8 @@ package ant;
 import static java.lang.Math.abs;
 import java.util.HashMap;
 import java.util.Map;
+import static javax.swing.Spring.height;
+import static javax.swing.Spring.width;
 
 /**
  *
@@ -39,6 +41,25 @@ public class GameModel {
         
     }
     
+    public void antSetup(){
+        //loop through board model L-->R T-->B
+        int height = boardModel.length;
+        int width = boardModel[1].length;
+        int count = 0;
+        for(int y = 0; y<height; y++){
+            for(int x =0; x<width;x++){
+                int cellVal = boardModel[y][x];
+                
+                if(cellVal == 2 || cellVal == 3){ //if cell = redAntHill
+                    Ant tempAnt = new Ant(count,cellVal-1);
+                    tempAnt.setCoord(x, y);
+                    ants.put(count,tempAnt); //add  new ant to hashmap
+                    count++;
+                }
+                
+            }
+        }
+    }
     
     
     /**
@@ -233,15 +254,15 @@ public class GameModel {
     }
     
     /*
-    sensed_cell(p:pos, d:dir, sd:sense_dir):pos
-    set_ant_at(pos,ant):void
-    clear_ant_at(pos):void
-    set_marker_at(pos,color,marker):void
-    clear_marker_at(pos,colour,marker):void
-    check_marker_at(pos, color,marker):void
-    check_any_marker_at(pos,color):bool
-    cell_matches(pos,con,color):bool
-    get_instruction(color,state):instruction
+        sensed_cell(p:pos, d:dir, sd:sense_dir):pos
+        set_ant_at(pos,ant):void
+        clear_ant_at(pos):void
+        set_marker_at(pos,color,marker):void
+        clear_marker_at(pos,colour,marker):void
+        check_marker_at(pos, color,marker):void
+        check_any_marker_at(pos,color):bool
+        cell_matches(pos,con,color):bool
+        get_instruction(color,state):instruction
     */
 
 
