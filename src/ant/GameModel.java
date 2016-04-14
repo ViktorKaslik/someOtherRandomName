@@ -23,19 +23,13 @@ public class GameModel {
     
     public GameModel(){
         tileSize = 5;
-        
         ants = new HashMap<Integer,Ant>();
-        
         modelGen boardGen = new modelGen();
         boardModel = boardGen.getBoard();
-        
+        antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         
-        Ant aa = new Ant(1,2);
-        aa.setCoord(10, 8);
-        ants.put(2,aa);
-        refresh();
-        
+        //refresh();
     }
     
     public void antSetup(){
@@ -250,16 +244,19 @@ public class GameModel {
         }
     }
     
+    public void set_ant_at(int x, int y ,Ant ant){
+        ant.setCoord(x, y);
+    }
+    
     /*
         sensed_cell(p:pos, d:dir, sd:sense_dir):pos
-        set_ant_at(pos,ant):void
-        clear_ant_at(pos):void
+        clear_ant_at(pos):void //dont belive this is required
         set_marker_at(pos,color,marker):void
         clear_marker_at(pos,colour,marker):void
         check_marker_at(pos, color,marker):void
         check_any_marker_at(pos,color):bool
         cell_matches(pos,con,color):bool
-        get_instruction(color,state):instruction
+        get_instruction(color,state):instruction //need antbrain model 1st
     */
 
 
