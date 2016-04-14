@@ -23,11 +23,8 @@ public class GameModel {
     
     public GameModel(){
         tileSize = 5;
-        Ant a = new Ant(1,2);
-        a.setCoord(7, 7);
-        ants = new HashMap<Integer,Ant>();
-        ants.put(1,a);
         
+        ants = new HashMap<Integer,Ant>();
         
         modelGen boardGen = new modelGen();
         boardModel = boardGen.getBoard();
