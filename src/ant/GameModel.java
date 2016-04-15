@@ -17,6 +17,7 @@ import static javax.swing.Spring.width;
  */
 public class GameModel {
     private int[][] boardModel;
+    private Marker[][] markerModel;
     private Board boardGui;
     private int tileSize;
     private HashMap<Integer,Ant> ants;
@@ -28,10 +29,14 @@ public class GameModel {
         boardModel = boardGen.getBoard();
         antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
-        
+        senseSetup();
         //refresh();
     }
     
+    /**
+     * loops through board left to right, top to bottom creating an ant when ever an anthill 
+     * cell is located. The ants are given their ID's in the order in which they are created
+     */
     public void antSetup(){
         //loop through board model L-->R T-->B
         int height = boardModel.length;
@@ -48,6 +53,19 @@ public class GameModel {
                     count++;
                 }
                 
+            }
+        }
+    }
+    
+    /**
+     * Creates a MarkerBoard where each cell on the board corrosponds to a cell on the marker board
+     */
+    public void senseSetup(){
+        int height = boardModel.length;
+        int width = boardModel[1].length;
+        for(int y = 0; y<height; y++){
+            for(int x =0; x<width;x++){
+                markerModel[y][x] = new Marker();
             }
         }
     }
@@ -81,6 +99,11 @@ public class GameModel {
         return new int[]{x,y};
     }
     
+    /**
+     * gets the state of an ant
+     * @param ant the Ant in which you want the state off
+     * @return int, the ants state
+     */
     public int State(Ant ant){return ant.getState();}
     
     public int colour(Ant ant){return ant.getColor();}
@@ -99,6 +122,11 @@ public class GameModel {
     
     public void set_has_food(Ant ant, boolean bool){ ant.setHasFood(bool);}
     
+    /**
+     * Changes the ants direction 
+     * @param ant Ant to which you want to alter
+     * @param lr the direction you want to turn ('l' or 'r')
+     */
     public void turn(Ant ant, char lr){
         int dir = direction(ant);
         int newDir;
@@ -107,15 +135,34 @@ public class GameModel {
         ant.setDirection(newDir);
     }
     
+    /**
+     * gets the number of food particles at cell x,y
+     * @param x coordinate 
+     * @param y coordinate
+     * @return number of food particles at specified cell
+     */
     public int food_at(int x, int y){
         //tile 5 = 1 food 
         return boardModel[y][x]-4;
     }
     
+    /**
+     * sets the number of food particles at cell x,y
+     * @param x coordinate
+     * @param y coordinate
+     * @param food the number of food particles 
+     */
     public void set_food_at(int x, int y, int food){
         boardModel[y][x] = food+4;
     }
     
+    /**
+     * returns true if cell at coordinates contains the anthill that match's the colour 
+     * @param x coordinate
+     * @param y coordinate
+     * @param colour of ant hill
+     * @return true if colour == anthill
+     */
     public boolean anthill_at(int x, int y, int colour){
         return (boardModel[y][x] == colour);
     }
@@ -158,25 +205,50 @@ public class GameModel {
         return null;
     }
     
+    /**
+     * checks if there is an ant of either colour in cell x,y
+     * @param x coordinate
+     * @param y coordinate
+     * @return true if ant is present false otherwise
+     */
     public boolean some_ant_is_at(int x, int y){
         return isAntAt(x,y) != null;
     }
 
-       
+    /**
+     * finds the coordinate that the ant with id is in
+     * @param id of Ant
+     * @return coordinate of ant
+     */   
     public int[] find_ant(int id){
         Ant ant = ants.get(id);
         return ant.getCoord();
     }
     
+    /**
+     * checks if cell is rocky 
+     * @param x coordinate
+     * @param y coordinate
+     * @return true if cell is rocky false otherwise
+     */
     public boolean rocky(int x, int y){
         return boardModel[y][x] == 1;
     }
     
+    /**
+     * checks if ant is alive
+     * @param id of ant
+     * @return true if ant is alive, false otherwise
+     */
     public boolean ant_is_alive(int id){
         Ant ant = ants.get(id);
         return ant != null;
     }
     
+    /**
+     * checks if ant is surrounded, if it is then ant dies
+     * @param ant to check
+     */
     public void check_for_surround_ant_at(Ant ant){
         int[] coord = ant.getCoord();
         if(adjacent_ants(coord[0],coord[1], abs(ant.getColor()-1)) >=5){
@@ -184,12 +256,20 @@ public class GameModel {
         }
     }
     
+    /**
+     * kills the ant passed to it
+     * @param a Ant to be killed
+     */
     public void kill_ant(Ant a){
         int[] coord = a.getCoord();
         ants.put(a.getId(), null); //kill ant
         set_food_at(coord[0],coord[1],food_at(coord[0],coord[1])+3); //adds 3 to food at coords
     }
     
+    /**
+     * makes ants move
+     * @param id of ant to move
+     */
     public void step(int id){
         if(ant_is_alive(id)){
             Ant ant = ants.get(id);
@@ -244,18 +324,43 @@ public class GameModel {
         }
     }
     
+    /**
+     * set ants coordinate's as x,y
+     * @param x coordinate
+     * @param y coordinate
+     * @param ant  ant to be updated
+     */
     public void set_ant_at(int x, int y ,Ant ant){
         ant.setCoord(x, y);
     }
     
+    public void set_marker_at(int x, int y, int color, int marker){
+        markerModel[y][x].placeMarker(color, marker);
+    }
+    
+    public void clear_marker_at(int x, int y, int color, int marker){
+        markerModel[y][x].removeMarker(color, marker);
+    }
+    
+    public boolean check_marker_at(int x, int y, int color, int marker){
+        if(markerModel[y][x].getMarker(color, marker) > 0)
+            return true;
+        return false;
+    }
+    
+    public boolean check_any_marker_at(int x, int y, int color)
+    {
+        for(int i=0; i<5; i++){
+            if(markerModel[y][x].getMarker(color, i) > 0)
+                return true;
+        }
+        return false;
+    }
     /*
         sensed_cell(p:pos, d:dir, sd:sense_dir):pos
-        clear_ant_at(pos):void //dont belive this is required
-        set_marker_at(pos,color,marker):void
-        clear_marker_at(pos,colour,marker):void
-        check_marker_at(pos, color,marker):void
-        check_any_marker_at(pos,color):bool
+        
         cell_matches(pos,con,color):bool
+        clear_ant_at(pos):void //dont belive this is required
         get_instruction(color,state):instruction //need antbrain model 1st
     */
 
