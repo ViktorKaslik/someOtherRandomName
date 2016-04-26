@@ -251,10 +251,13 @@ public class modelGen {
         if(x+size+2 > w || x < 1){ return false;}
         if(matrix[y][x] != 4){ return false;}
         try{
-            for(int xx = x-2; xx<(x+size+3); xx++){
-                for(int yy = y-2; yy<(y+size+3); yy++){
+            for(int xx = x-3; xx<(x+size+5); xx++){
+                for(int yy = y-3; yy<(y+size+5); yy++){
                 //System.out.println(" "+y+" "+xx);
                     if(matrix[yy][xx] == 2 || matrix[yy][xx] == 3 || matrix[yy][xx] > 4){ pass = false; }
+                    if(xx == x && yy == y){
+                        if(matrix[yy][xx] == 1){pass=false;}
+                    }
                 }
             }
         }catch(Exception e){}

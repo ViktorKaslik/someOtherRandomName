@@ -5,9 +5,12 @@
  */
 package ant;
 
+import java.io.File;
 import static java.lang.Math.abs;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.swing.Spring.height;
 import static javax.swing.Spring.width;
 
@@ -21,6 +24,7 @@ public class GameModel {
     private Board boardGui;
     private int tileSize;
     private HashMap<Integer,Ant> ants;
+    private Brains brains;
     
     public GameModel(){
         tileSize = 5;
@@ -70,6 +74,13 @@ public class GameModel {
         }
     }
     
+    public void loadBrains(File redF, File blackF){
+        try {
+            brains = new Brains(redF,blackF);
+        } catch (Exception ex) {
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     /**
      * calculates the index of the adjacent cells
@@ -356,12 +367,17 @@ public class GameModel {
         }
         return false;
     }
+    
+    public void get_instruction(int color, int state){
+        String[] instruction = brains.getInstruction(state, color);
+        //process instruction and call relevent instructions
+    }
     /*
         sensed_cell(p:pos, d:dir, sd:sense_dir):pos
         
         cell_matches(pos,con,color):bool
         clear_ant_at(pos):void //dont belive this is required
-        get_instruction(color,state):instruction //need antbrain model 1st
+        
     */
 
 

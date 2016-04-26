@@ -105,7 +105,7 @@ class Board {
                 if(tile >= 13)//if theres more than 9 food place food9 tile
                     tile = 13;
                 if(an == null){ b1 = getImg(tile);}
-                else{b1 = getAntImg(an.getColor(),0);}
+                else{b1 = getAntImg(an.getColor()+1,0);}
                 Dimension dSize = b1.getPreferredSize();
                 pan.add(b1);
                 b1.setBounds(w + insets.left, h + insets.top, dSize.width, dSize.height);

@@ -19,9 +19,7 @@ import java.util.List;
 public class Brains {
     private String [][] red, black;
     
-    
     public Brains(File redF, File blackF) throws Exception{
-        
         for(int x=0; x<2; x++){
             File file;
             List<String> lines = new LinkedList<String>(); // create a new list
