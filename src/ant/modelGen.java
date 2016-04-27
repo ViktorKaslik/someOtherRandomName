@@ -139,8 +139,8 @@ public class modelGen {
     private boolean antIsClear(int x, int y, int[][] matrix, int de){
         //increase to 7x7
         boolean pass= true;
-        for(int yy=(y-1); yy<(y+((de*2)+2)); yy++){
-            for(int xx = x-3; xx<x+(de+3); xx++){
+        for(int yy=(y-2); yy<(y+((de*2)+4)); yy++){
+            for(int xx = x-4; xx<x+(de+5); xx++){
                 if(matrix[yy][xx] == 2){
                     pass = false;
                 }
@@ -222,7 +222,7 @@ public class modelGen {
                 yIn = randInt(1,height-1);
             }
             
-            if(!rockAdjacentToRock(xIn,yIn,matrix)){i+=1;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
+            if(!rockAdjacentToRock(xIn,yIn,size,matrix)){i+=1;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
             //System.out.println(yIn + " "+xIn + " "+i);
             size = randInt(4,15);
             for(int x=xIn; x<xIn+size; x++){
@@ -254,7 +254,9 @@ public class modelGen {
             for(int xx = x-3; xx<(x+size+5); xx++){
                 for(int yy = y-3; yy<(y+size+5); yy++){
                 //System.out.println(" "+y+" "+xx);
-                    if(matrix[yy][xx] == 2 || matrix[yy][xx] == 3 || matrix[yy][xx] > 4){ pass = false; }
+                    if(matrix[yy][xx] == 2){ pass = false; }//red anthill
+                    if(matrix[yy][xx] == 3){ pass = false; }//black anthill
+                    if(matrix[yy][xx] > 4){ pass = false; } //food
                     if(xx == x && yy == y){
                         if(matrix[yy][xx] == 1){pass=false;}
                     }
@@ -264,14 +266,18 @@ public class modelGen {
         return pass;
     }
     
-    private boolean rockAdjacentToRock(int xIn, int yIn, int[][] matrix){
+    private boolean rockAdjacentToRock(int xIn, int yIn, int size, int[][] matrix){
         boolean pass= false;
         int h = matrix.length;
         int w = matrix[1].length;
         int[] nextTo = new int[]{0,0};
-        for(int i =0; i<6; i++){
-            nextTo = adjacent_cell(xIn, yIn, i);
-            if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+        for(int x = xIn; x<xIn+size; x++){
+            for(int y = yIn; y<y+size; y++){
+                for(int i =0; i<6; i++){
+                    nextTo = adjacent_cell(xIn, yIn, i);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                }
+            }
         }
         
         return pass;
