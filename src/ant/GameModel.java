@@ -9,6 +9,7 @@ import java.io.File;
 import static java.lang.Math.abs;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.Spring.height;
@@ -367,10 +368,209 @@ public class GameModel {
         }
         return false;
     }
+    public void sense(Ant ant, int dir, int st1, int st2, int cond){
+        int[] coord = ant.getCoord();
+        if(dir == 0){// here
+            coord = ant.getCoord();
+        }else if(dir == 1){ //ahead
+            coord = adjacent_cell(coord[0], coord[1],ant.getDirection());
+        }else if(dir == 2){ //leftahead           
+            int temp = (ant.getDirection()+5)%6; 
+            coord = adjacent_cell(coord[0], coord[1],temp);
+        }else if (dir == 3){//rightahead
+            int temp = (ant.getDirection()+1)%6; 
+            coord = adjacent_cell(coord[0], coord[1],temp);
+        }
+        /*conditions*/
+        if(cond==0){//is ant friend
+            Ant antAt = isAntAt(coord[0],coord[1]);
+            if(antAt.getColor() == ant.getColor()){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond==1){//is ant foe
+            Ant antAt = isAntAt(coord[0],coord[1]);
+            if(antAt.getColor() != ant.getColor()){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond==2){//is ant friend with food
+            Ant antAt = isAntAt(coord[0],coord[1]);
+            if(antAt.getColor() == ant.getColor() && ant.HasFood() == true){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond==3){//is ant foe with food
+            Ant antAt = isAntAt(coord[0],coord[1]);
+            if(antAt.getColor() != ant.getColor() && ant.HasFood() == true){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond==4){//is food
+            if(food_at(coord[0],coord[1]) > 0){
+                 ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond==5){//is rocky
+            if(rocky(coord[0],coord[1]) == true){
+                 ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond >= 6 && cond <= 11){//is friend marker
+            if(check_marker_at(coord[0],coord[1],ant.getColor(),cond-6)){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond == 12){//is foe marker
+            //abs(ant.getColor()-1) flips the ants colour
+            if(check_any_marker_at(coord[0],coord[1],abs(ant.getColor()-1))){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond == 13){//is home
+            if(anthill_at(coord[0],coord[1],ant.getColor())){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }else if(cond == 14){//is foe home
+            if(anthill_at(coord[0],coord[1],abs(ant.getColor()-1))){
+                ant.setState(st1);
+            }else{
+                ant.setState(st2);
+            }
+        }
+    }
     
-    public void get_instruction(int color, int state){
+    public int flip(int p){
+        Random randomGenerator = new Random();
+        return randomGenerator.nextInt(p);
+        
+    }
+    
+    public void get_instruction(int color, int state, Ant ant){
         String[] instruction = brains.getInstruction(state, color);
         //process instruction and call relevent instructions
+        //maybe convert string into int code on parsing
+        switch(instruction[0]){
+                case("sense"):
+                    //Sense(dir, st1,st2,cond)
+                    int dir=0;
+                    if(instruction[1].equals("here")){
+                        dir=0;
+                    }else if(instruction[1].equals("ahead")){
+                        dir=1;
+                    }else if(instruction[1].equals("leftahead")){
+                        dir=2;
+                    }else if(instruction[1].equals("rightahead")){
+                        dir=3;
+                    }
+                    
+                    int st1 = Integer.parseInt(instruction[2]);
+                    int st2 = Integer.parseInt(instruction[3]);
+                    
+                    int cond=0;
+                    if(instruction[4].equals("friend")){
+                        cond = 0;
+                    }else if(instruction[4].equals("foe")){
+                        cond = 1;
+                    }else if(instruction[4].equals("friendwithfood")){
+                        cond = 2;
+                    }else if(instruction[4].equals("foewithfood")){
+                        cond = 3;
+                    }else if( instruction[4].equals("food")){
+                        cond = 4;
+                    }else if( instruction[4].equals("rock")){
+                        cond = 5;
+                    }else if(instruction[4].equals("marker_0")){
+                        cond = 6;
+                    }else if(instruction[4].equals("marker_1")){ 
+                        cond = 7;
+                    }else if(instruction[4].equals("marker_2")){
+                        cond = 8;
+                    }else if( instruction[4].equals("marker_3")){
+                        cond = 9;
+                    }else if( instruction[4].equals("marker_4")){
+                        cond = 10;
+                    }else if( instruction[4].equals("marker_5")){
+                        cond = 11;
+                    }else if(instruction[4].equals("foemarker")){
+                        cond = 12;
+                    }else if(instruction[4].equals("home")){
+                        cond = 13;
+                    }else if(instruction[4].equals("foehome")){
+                        cond = 14;
+                    }
+                    sense(ant,dir,st1,st2,cond);
+                    break;
+                case("mark"):
+                    //Mark(i,st)
+                    int i = Integer.parseInt(instruction[1]);
+                    int st = Integer.parseInt(instruction[2]);
+                    int[] coord = ant.getCoord();
+                    set_marker_at(coord[0],coord[1],ant.getColor(),i);
+                    ant.setState(st);
+                    break;
+                case("unmark"): // using case fall through as syntax is identicle
+                    //Unmark(i,st)
+                    int ii = Integer.parseInt(instruction[1]);
+                    int stt = Integer.parseInt(instruction[2]);
+                    int[] coord1 = ant.getCoord();
+                    clear_marker_at(coord1[0],coord1[1],ant.getColor(),ii);
+                    ant.setState(stt);
+                    break;
+                case("pickup"):
+                    //PickUp(st1,st2)
+                    int[] co = ant.getCoord();
+                    if(food_at(co[0],co[1])>0){
+                        if(!ant.HasFood()){
+                            set_food_at(co[0],co[1],food_at(co[0],co[1])-1);
+                            ant.setHasFood(true);
+                        }
+                        ant.setState(Integer.parseInt(instruction[2]));
+                    }else{ant.setState(Integer.parseInt(instruction[2]));}
+                case("move"): 
+                    //Move(st1,st2)
+                    if(ant.getResting() == 0){
+                        step(ant.getId());
+                        ant.setState(Integer.parseInt(instruction[1]));
+                    }else{ant.setState(Integer.parseInt(instruction[2]));}
+                    
+                    break;
+                
+                case("drop"):
+                    //Drop(st)
+                    int[] coo = ant.getCoord();
+                    if(ant.HasFood()){
+                        set_food_at(coo[0],coo[1],food_at(coo[0],coo[1])+1);
+                        ant.setHasFood(false);
+                    }
+                    ant.setState(Integer.parseInt(instruction[1]));
+                    break;
+                case("turn"):
+                    //Turn(lr,st)
+                    char lr;
+                    if(instruction[1].equals("left")){lr = 'l';}
+                    else{lr='r';}
+                    turn(ant,lr);
+                    ant.setState(Integer.parseInt(instruction[1]));
+                    break;
+                case("flip"):
+                    //Flip(p,st1,st2)
+                    int rand = flip(Integer.parseInt(instruction[1]));
+                    if(rand == 0){ant.setState(Integer.parseInt(instruction[2]));
+                    }else{ant.setState(Integer.parseInt(instruction[1]));}
+                    break;
+               
+        }
     }
     /*
         sensed_cell(p:pos, d:dir, sd:sense_dir):pos
