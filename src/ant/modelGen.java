@@ -294,6 +294,10 @@ public class modelGen {
         return randomNum;
     }
     
+    /*
+        add function to check if is valid tornment world 
+        add function to load world files.
+    */
     
     //////debugging help
     private void print(int[][] A){

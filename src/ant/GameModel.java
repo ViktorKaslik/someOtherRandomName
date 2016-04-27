@@ -8,6 +8,7 @@ package ant;
 import java.io.File;
 import static java.lang.Math.abs;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
@@ -26,9 +27,11 @@ public class GameModel {
     private int tileSize;
     private HashMap<Integer,Ant> ants;
     private Brains brains;
+    private int round;
     
     public GameModel(){
         tileSize = 5;
+        round = 300000;
         ants = new HashMap<Integer,Ant>();
         modelGen boardGen = new modelGen();
         boardModel = boardGen.getBoard();
@@ -81,6 +84,17 @@ public class GameModel {
         } catch (Exception ex) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void playRounds(){
+        while(round !=0){
+            for(int i = 0; i<ants.size(); i++){
+                //Ant ant = ants.get(i);
+                step(i);
+            }
+            round--;
+        }
+        
     }
     
     /**
@@ -261,11 +275,13 @@ public class GameModel {
      * checks if ant is surrounded, if it is then ant dies
      * @param ant to check
      */
-    public void check_for_surround_ant_at(Ant ant){
+    public boolean check_for_surround_ant_at(Ant ant){
         int[] coord = ant.getCoord();
         if(adjacent_ants(coord[0],coord[1], abs(ant.getColor()-1)) >=5){
             kill_ant(ant);
+            return true;
         }
+        return false;
     }
     
     /**
@@ -285,53 +301,14 @@ public class GameModel {
     public void step(int id){
         if(ant_is_alive(id)){
             Ant ant = ants.get(id);
-            if(ant.getResting() > 0){
-                ant.setResting(ant.getResting()-1);
-            }
-            else{
-                //getInstruction
-                /*switch get_instruction(color(a), state(a)) of
-                    case Sense(sensedir, st1, st2, cond):
-                    let p' = sensed_cell(p, direction(a), sensedir) in
-                    let st = if cell_matches(p', cond, color(a)) then st1 else st2 in
-                    set_state(a, st)
-                    case Mark(i, st):
-                    set_marker_at(p, color(a), i);
-                    set_state(a, st)
-                    case Unmark(i, st):
-                    clear_marker_at(p, color(a), i);
-                    set_state(a, st)
-                    case PickUp(st1, st2):
-                    if has_food(a) || food_at(p) = 0 then
-                    set_state(a, st2)
-                    else begin
-                    set_food_at(p, food_at(p) - 1);
-                    set_has_food(a, true);
-                    set_state(a, st1)
-                    end
-                    case Drop(st):
-                    if has_food(a) then begin
-                    set_food_at(p, food_at(p) + 1);
-                    set_has_food(a, false)
-                    end;
-                    set_state(a, st)
-                    case Turn(lr, st):
-                    set_direction(a, turn(lr, direction(a)));
-                    set_state(a, st)
-                    case Move(st1, st2):
-                    let newp = adjacent_cell(p, direction(a)) in
-                    if rocky(newp) || some_ant_is_at(newp) then
-                    set_state(a, st2)
-                    else begin
-                    clear_ant_at(p);
-                    set_ant_at(newp, a);
-                    set_state(a, st1);
-                    set_resting(a, 14);
-                    check_for_surrounded_ants(newp)
-                    end
-                    case Flip(n, st1, st2):
-                    let st = if randomintno = 0 then st1 else st2 in
-                    set_state(a, st)*/
+            if(!check_for_surround_ant_at(ant)){
+                if(ant.getResting() > 0){
+                    ant.setResting(ant.getResting()-1);
+                }
+                else{
+                    //getInstruction
+                    get_instruction(ant);
+                }
             }
         }
     }
@@ -450,16 +427,26 @@ public class GameModel {
         }
     }
     
+    public void move(Ant ant){
+        int[] coord = ant.getCoord();
+        int[] cellCoord = adjacent_cell(coord[0],coord[1],ant.getDirection());
+        if(rocky(cellCoord[0],cellCoord[1]) == false){
+            ant.setCoord(cellCoord[0],cellCoord[1]);
+            ant.setResting(14);
+        }
+    }
+    
     public int flip(int p){
         Random randomGenerator = new Random();
         return randomGenerator.nextInt(p);
         
     }
     
-    public void get_instruction(int color, int state, Ant ant){
-        String[] instruction = brains.getInstruction(state, color);
+    public void get_instruction(Ant ant){
+        String[] instruction = brains.getInstruction(ant.getState(), ant.getColor());
         //process instruction and call relevent instructions
         //maybe convert string into int code on parsing
+        //ant.setResting(ant.getResting()-1);
         switch(instruction[0]){
                 case("sense"):
                     //Sense(dir, st1,st2,cond)
@@ -540,7 +527,7 @@ public class GameModel {
                 case("move"): 
                     //Move(st1,st2)
                     if(ant.getResting() == 0){
-                        step(ant.getId());
+                        move(ant);
                         ant.setState(Integer.parseInt(instruction[1]));
                     }else{ant.setState(Integer.parseInt(instruction[2]));}
                     
