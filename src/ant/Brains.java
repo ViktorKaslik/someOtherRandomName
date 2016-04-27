@@ -94,8 +94,7 @@ public class Brains {
                                 }else{isValid = false;}
                             }else{isValid = false;}
                         }else{isValid = false;}
-                    }
-                    else{isValid = false;}
+                    }else{isValid = false;}
                     break;
                 case("mark"):
                 case("unmark"): // using case fall through as syntax is identicle
