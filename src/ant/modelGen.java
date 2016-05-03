@@ -108,7 +108,7 @@ public class modelGen {
      * @param dir direction of adjacent tile
      * @return an int array in the form [x,y]
      */
-    public int[] adjacent_cell(int x, int y, int dir){ // may make static???
+    public int[] adjacent_cell(int x, int y, int dir){ 
         
         if(y%2 == 0){
             if(dir == 0){ x=x+1; }
@@ -138,10 +138,16 @@ public class modelGen {
      */
     private boolean antIsClear(int x, int y, int[][] matrix, int de){
         //increase to 7x7
+        int w = boardModel[1].length;
+        int h = boardModel.length;
         boolean pass= true;
+        if(x-8 < 0 || x+8 > w){pass =false;}
+        if(y-8 < 0 || y+8 > h){pass =false;}
         for(int yy=(y-2); yy<(y+((de*2)+4)); yy++){
             for(int xx = x-4; xx<x+(de+5); xx++){
-                if(matrix[yy][xx] == 2){
+                if(xx < 0 || xx > w-1 || yy < 0 || yy > h-1){pass =false;}
+                //if(yy < 0 || yy > w){pass =false;}
+                else if(matrix[yy][xx] == 2){
                     pass = false;
                 }
             }
@@ -217,14 +223,16 @@ public class modelGen {
         int yIn = randInt(1,height-1);
         int i=0;
         while(i < 14){
-            while(!rockIsClear(xIn,yIn, matrix,size)){
+            size = randInt(2,10);
+            while(rockIsClear(xIn,yIn, matrix,size) == false){
                 xIn = randInt(1,width-1);
                 yIn = randInt(1,height-1);
             }
             
-            if(!rockAdjacentToRock(xIn,yIn,size,matrix)){i+=1;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
+            if(!rockAdjacentToRock(xIn,yIn,size,matrix)){i++;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
+            //i+=1;
             //System.out.println(yIn + " "+xIn + " "+i);
-            size = randInt(4,15);
+            //size = randInt(4,15);
             for(int x=xIn; x<xIn+size; x++){
                 for(int y=yIn; y<yIn+size; y++){
                     matrix[y][x]=1;
@@ -247,22 +255,22 @@ public class modelGen {
         boolean pass= true;
         int h = matrix.length;
         int w = matrix[1].length;
-        if(y+size+2 > h || y < 2){ return false;}
-        if(x+size+2 > w || x < 1){ return false;}
+        if(y+size+2 > h || y < 3){ return false;}
+        if(x+size+2 > w || x < 3){ return false;}
         if(matrix[y][x] != 4){ return false;}
-        try{
-            for(int xx = x-3; xx<(x+size+5); xx++){
-                for(int yy = y-3; yy<(y+size+5); yy++){
-                //System.out.println(" "+y+" "+xx);
-                    if(matrix[yy][xx] == 2){ pass = false; }//red anthill
-                    if(matrix[yy][xx] == 3){ pass = false; }//black anthill
-                    if(matrix[yy][xx] > 4){ pass = false; } //food
-                    if(xx == x && yy == y){
-                        if(matrix[yy][xx] == 1){pass=false;}
-                    }
+        
+        for(int xx = x-3; xx<(x+size+5); xx++){
+            for(int yy = y-3; yy<(y+size+5); yy++){
+            //System.out.println(" "+y+" "+xx);
+                if(yy >=h || xx>=w){pass=false; break;}
+                if(matrix[yy][xx] == 2){ pass = false; }//red anthill
+                if(matrix[yy][xx] == 3){ pass = false; }//black anthill
+                if(matrix[yy][xx] > 4){ pass = false; } //food
+                if(xx == x && yy == y){
+                    if(matrix[yy][xx] == 1){pass=false;}
                 }
             }
-        }catch(Exception e){}
+        }
         return pass;
     }
     
@@ -271,10 +279,34 @@ public class modelGen {
         int h = matrix.length;
         int w = matrix[1].length;
         int[] nextTo = new int[]{0,0};
-        for(int x = xIn; x<xIn+size; x++){
-            for(int y = yIn; y<y+size; y++){
-                for(int i =0; i<6; i++){
+        for(int y = yIn; y<yIn+size; y++){
+            for(int x = xIn; x<xIn+size; x++){
+                /*for(int i =0; i<6; i++){
                     nextTo = adjacent_cell(xIn, yIn, i);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                }*/
+                /***************check whats sides are on x and y*/
+                if(y== yIn){
+                    nextTo = adjacent_cell(x, y, 4);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                    nextTo = adjacent_cell(x, y, 5);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}                }
+                if(x == xIn){
+                    nextTo = adjacent_cell(x, y, 2);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                    nextTo = adjacent_cell(x, y,3);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                }
+                if(x==xIn+size){
+                    nextTo = adjacent_cell(x, y, 0);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                    nextTo = adjacent_cell(x, y, 1);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                }
+                if(y == yIn+size){
+                    nextTo = adjacent_cell(x, y,1);
+                    if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
+                    nextTo = adjacent_cell(x, y,2);
                     if(matrix[nextTo[0]][nextTo[1]] == 1){pass = true;}
                 }
             }
@@ -283,7 +315,19 @@ public class modelGen {
         return pass;
     }
     
-    
+      private boolean isValidRock(int x, int y, int[][] matrix){
+        boolean pass = false;  
+            for(int i=0; i<6; i++){
+                int[] adCell = adjacent_cell(x,y,i);
+                if(matrix[adCell[1]][adCell[0]] == 1){
+                    pass = true;
+                }
+                if(matrix[adCell[1]][adCell[0]] == 4){
+                    pass = true;
+                }
+            }
+        return pass;
+    }
     
     /////////////////////////////////////////////////////////////////////////////rock functions need redesigning ^^^^
     

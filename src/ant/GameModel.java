@@ -71,6 +71,7 @@ public class GameModel {
     public void senseSetup(){
         int height = boardModel.length;
         int width = boardModel[1].length;
+        markerModel = new Marker[height][width];
         for(int y = 0; y<height; y++){
             for(int x =0; x<width;x++){
                 markerModel[y][x] = new Marker();
@@ -88,6 +89,9 @@ public class GameModel {
     
     public void playRounds(){
         while(round !=0){
+            if(round % 50 == 0){
+                refresh();
+            }
             for(int i = 0; i<ants.size(); i++){
                 //Ant ant = ants.get(i);
                 step(i);
