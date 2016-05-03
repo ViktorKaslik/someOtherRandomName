@@ -12,8 +12,10 @@ package ant;
 class Marker {
      private int[] red;
      private int[] black;
+     private int food;
      
    public Marker(){
+       food = 0;
         red = new int[5];
         black = new int[5];
         for(int i=0; i<5; i++){
@@ -45,6 +47,13 @@ class Marker {
         }else if(colour == 1){
             black[marker] = 0;
         }
+   }
+   public int getFood(){
+       return food;
+   }
+   
+   public void setFood(int x){
+       food = x;
    }
    
    

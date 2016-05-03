@@ -98,7 +98,31 @@ public class GameModel {
             }
             round--;
         }
+        int winner = getWinner();
+    }
+    
+    public int getWinner(){
+        int red=0;
+        int black = 0;
+        int height = boardModel.length;
+        int width = boardModel[1].length;
         
+        for(int y = 0; y<height; y++){
+            for(int x =0; x<width;x++){
+                if(boardModel[y][x] == 2){
+                    red = red+ markerModel[y][x].getFood();
+                }
+                if(boardModel[y][x] == 3){
+                    black = black + markerModel[y][x].getFood();
+                }
+            }
+        }
+        if(red>black)
+            return 0;
+        else if(black > red)
+            return 1;
+        else
+        return -1;
     }
     
     /**
@@ -183,7 +207,10 @@ public class GameModel {
      * @param food the number of food particles 
      */
     public void set_food_at(int x, int y, int food){
-        boardModel[y][x] = food+4;
+        if(boardModel[y][x] == 2 && boardModel[y][x] == 3){
+            boardModel[y][x] = food+4;
+        }
+        markerModel[y][x].setFood(food);
     }
     
     /**
