@@ -28,13 +28,16 @@ public class GameModel {
     private HashMap<Integer,Ant> ants;
     private Brains brains;
     private int round;
+    public int winner;
     
-    public GameModel(){
+    public GameModel(File redF, File blackF){
+        winner = -1;
         tileSize = 5;
         round = 300000;
         ants = new HashMap<Integer,Ant>();
         modelGen boardGen = new modelGen();
         boardModel = boardGen.getBoard();
+        loadBrains(redF, blackF);
         antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();
@@ -98,10 +101,10 @@ public class GameModel {
             }
             round--;
         }
-        int winner = getWinner();
+        int winner = calcWinner();
     }
     
-    public int getWinner(){
+    public int calcWinner(){
         int red=0;
         int black = 0;
         int height = boardModel.length;
@@ -124,6 +127,8 @@ public class GameModel {
         else
         return -1;
     }
+    
+    public int getWinner(){ return winner; }
     
     /**
      * calculates the index of the adjacent cells

@@ -5,6 +5,8 @@
  */
 package ant;
 
+import java.io.File;
+
 /**
  *
  * @author vikto
@@ -38,7 +40,7 @@ public class Setup {
             {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
             {1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 , 1}
         };
-        new GameModel();
+        //new GameModel(redFile,blackFile);
         //Board b = new Board(multi,30);
     }
     
