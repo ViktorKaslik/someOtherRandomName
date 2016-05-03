@@ -30,14 +30,14 @@ public class GameModel {
     private int round;
     public int winner;
     
-    public GameModel(File redF, File blackF){
+    public GameModel(/*File redF, File blackF*/){
         winner = -1;
         tileSize = 5;
         round = 300000;
         ants = new HashMap<Integer,Ant>();
         modelGen boardGen = new modelGen();
         boardModel = boardGen.getBoard();
-        loadBrains(redF, blackF);
+        //loadBrains(redF, blackF);
         antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();

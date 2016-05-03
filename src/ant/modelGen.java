@@ -28,6 +28,9 @@ import java.util.Random;
 public class modelGen {
     private int[][] boardModel;
     
+    public modelGen(File file){
+        boardModel = loadWorld(file);
+    }
     /**
      * Generates a random map according to set rules
      */
@@ -353,11 +356,67 @@ public class modelGen {
     public boolean isValidWorld(int[][] matrix){
         boolean isValid;
         isValid = false;
-        
-        //loop through map counting number of ant hills, food and rocks
+        isValid = isBoarderValid(matrix);
+        if(!isValid){return false;}
+        isValid = isAntHillValid(matrix);
+        if(!isValid){return false;}
+        //count rocks
         
         return isValid;
     }
+    
+    private boolean isBoarderValid(int[][] matrix) {
+        boolean pass = true;
+        int height = matrix.length;
+        int width = matrix[0].length;
+        for(int y =0; y<height; y++){
+            if(matrix[y][0] != 1 && matrix[y][width] != 1){
+                return false;
+            }
+        }
+        for(int x =0; x<height; x++){
+            if(matrix[0][x] != 1 && matrix[height][x] != 1){
+                return false;
+            }
+        }
+        return pass;
+    }
+    
+    public boolean isAntHillValid(int[][] matrix){
+        int height = matrix.length;
+        int width = matrix[0].length;
+        int antHill=0;
+        int dirt=0;
+        int food = 0;
+        for(int y=0; y<height;y++){
+            for(int x=0; x<width; x++){
+                if(matrix[y][x] == 2 || matrix[y][x] == 3){//is ant hill
+                    antHill += 1;
+                }
+                if(isDirtAdjacentToHill(x,y,matrix)){//is dirt or food on dirt
+                    dirt += 1;
+                }
+                if(matrix[y][x] > 5){//is a cell of 5 food
+                    food = food + (matrix[y][x]-4);
+                }
+            }
+        }
+        return (antHill == 254 && dirt == 84 && food == 1375); //each ant hill should consist of 127 tiles
+                                               //dirt surrounding an ant hill should = 42
+    }
+    
+    private boolean isDirtAdjacentToHill(int x, int y, int[][] matrix){
+        
+        for(int dir=0; dir<6; dir++){
+            int[] temp = adjacent_cell(x,y,dir);
+            if(temp[1] < matrix.length-1 && temp[0] < matrix[0].length-1 && temp[1] > 0 && temp[0] > 0)
+                if(matrix[temp[1]][temp[0]] == 2 || matrix[temp[1]][temp[0]] == 3){
+                    return true;
+                }
+        }
+        return false;
+    }
+    
     /*
         add function to check if is valid tornment world 
     */
@@ -412,6 +471,7 @@ public class modelGen {
         }
     }
 
+  
 
     
 }
