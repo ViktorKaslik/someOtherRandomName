@@ -1,6 +1,12 @@
 package ant;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /*
@@ -344,10 +350,54 @@ public class modelGen {
         return randomNum;
     }
     
+    public boolean isValidWorld(int[][] matrix){
+        boolean isValid;
+        isValid = false;
+        
+        //loop through map counting number of ant hills, food and rocks
+        
+        return isValid;
+    }
     /*
         add function to check if is valid tornment world 
-        add function to load world files.
     */
+    public int[][] loadWorld(File file){
+        List<String> lines = new LinkedList<String>(); // create a new list
+
+        try(BufferedReader in = new BufferedReader(new FileReader(file))){
+
+            String line = in.readLine(); // read a line at a time
+            while(line != null){ // loop till you have no more lines
+                lines.add(line); // add the line to your list
+                line = in.readLine(); // try to read another line
+            }
+
+        }catch(IOException e){
+            System.out.println(e);
+        }
+        int x = Integer.parseInt(lines.get(0));//load x
+        int y = Integer.parseInt(lines.get(1)); //load y
+        int[][] matrix = new int[y][x]; //create empty 2D matrix
+        
+        for(int yy = 2; yy<lines.size(); yy++){
+            String[] li = lines.get(yy).split(" ");
+            for (int xx = 0; xx<li.length; xx++){
+                if(li[xx].equals('#')){
+                    matrix[yy-2][xx] = 1;
+                }else if(li[xx].equals('.')){
+                    matrix[yy-2][xx] = 4;
+                }else if(li[xx].equals('+')){
+                    matrix[yy-2][xx] = 2;
+                }else if(li[xx].equals('-')){
+                    matrix[yy-2][xx] = 3;
+                }else if(li[xx].matches("\\d+")){//if is an int
+                    matrix[yy-2][xx] = Integer.parseInt(li[xx])+4;
+                }
+            }
+        }
+        
+        return matrix;
+    }
     
     //////debugging help
     private void print(int[][] A){
