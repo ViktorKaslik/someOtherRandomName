@@ -28,9 +28,15 @@ import java.util.Random;
 public class modelGen {
     private int[][] boardModel;
     
+    /**
+     * is a 2nd constructor for if you want to load a world that 
+     * has been produced in a text file
+     * @param file 
+     */
     public modelGen(File file){
         boardModel = loadWorld(file);
     }
+    
     /**
      * Generates a random map according to set rules
      */
@@ -61,6 +67,10 @@ public class modelGen {
         //Board b = new Board(boardModel,5,ants);//8
     }
     
+    /**
+     * gets the board model
+     * @return boardModel
+     */
     public int[][] getBoard(){return boardModel;}
     
     /**
@@ -353,6 +363,11 @@ public class modelGen {
         return randomNum;
     }
     
+    /**
+     * checks that world is valid
+     * @param matrix 2D int array of world
+     * @return true if valid else false
+     */
     public boolean isValidWorld(int[][] matrix){
         boolean isValid;
         isValid = false;
@@ -365,6 +380,11 @@ public class modelGen {
         return isValid;
     }
     
+    /**
+     * checks that the boarder of the map is made of rocks
+     * @param matrix 2D int array of world
+     * @return true if valid else false
+     */
     private boolean isBoarderValid(int[][] matrix) {
         boolean pass = true;
         int height = matrix.length;
@@ -382,6 +402,11 @@ public class modelGen {
         return pass;
     }
     
+    /**
+     * checks that there are 2 ant hills and that both are of correct size
+     * @param matrix 2D int array of world
+     * @return true if valid else false
+     */
     public boolean isAntHillValid(int[][] matrix){
         int height = matrix.length;
         int width = matrix[0].length;
@@ -405,6 +430,13 @@ public class modelGen {
                                                //dirt surrounding an ant hill should = 42
     }
     
+    /**
+     * checks if a dirt cell is adjacent to the ant hills
+     * @param x
+     * @param y
+     * @param matrix 2D int array of world
+     * @return true if valid else false
+     */
     private boolean isDirtAdjacentToHill(int x, int y, int[][] matrix){
         
         for(int dir=0; dir<6; dir++){
@@ -417,9 +449,11 @@ public class modelGen {
         return false;
     }
     
-    /*
-        add function to check if is valid tornment world 
-    */
+    /**
+     * loads and converts world files to be used in game
+     * @param file
+     * @return 2D int array of world
+     */
     public int[][] loadWorld(File file){
         List<String> lines = new LinkedList<String>(); // create a new list
 
@@ -458,7 +492,11 @@ public class modelGen {
         return matrix;
     }
     
-    //////debugging help
+
+    /**
+     * prints the matrix out (used for debugging)
+     * @param A 2D int array of world
+     */
     private void print(int[][] A){
         int h=A.length;
         int w=A[1].length;

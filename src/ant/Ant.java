@@ -38,21 +38,63 @@ public class Ant {
     
     
     /************************************ getters/ setters *********************/
+    /**
+     * gets the ants ID
+     * @return ID
+     */
     public int getId() { return id;}
-
+    
+    /**
+     * gets ants colour
+     * @return colour
+     */
     public int getColor() { return color; }
-
+    
+    /**
+     * gets ants state
+     * @return state
+     */
     public int getState() { return state; }
+    /**
+     * sets ants state
+     * @param s state
+     */
     public void setState(int s) { state = s;}
 
-
+    /**
+     * gets ants resting 
+     * @return resting
+     */
     public int getResting() { return resting; }
+    
+    /**
+     * sets ants resting to rest
+     * @param rest new resting value
+     */
     public void setResting(int rest) {resting = rest;}
 
+    /**
+     * gets the direction that the ant is facing
+     * @return direction
+     */
     public int getDirection() { return direction; }
+    
+    /**
+     * sets the direction to dir
+     * @param dir 
+     */
     public void setDirection(int dir){direction=dir;}
 
+    /**
+     * gets the hasFood value
+     * @return hasFood
+     */
     public boolean HasFood() { return hasFood; }
+    
+    /**
+     * sets has food to hf
+     * @param hf 
+     */
     public void setHasFood(boolean hf){hasFood = hf;}
     
     /**
@@ -60,6 +102,12 @@ public class Ant {
      * @return int[]{x,y}
      */
     public int[] getCoord(){return new int[]{xCoord,yCoord};}
+    
+    /**
+     * sets the ants position to x,y
+     * @param x
+     * @param y 
+     */
     public void setCoord(int x,int y){xCoord = x; yCoord = y;}
 
 

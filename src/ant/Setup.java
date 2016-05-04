@@ -20,7 +20,7 @@ public class Setup {
         // TODO code application logic here
         
         
-        int[][] multi = new int[][]{
+        /*int[][] multi = new int[][]{
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
             {1, 4, 4, 4, 2, 2, 2, 2, 2, 4, 4, 1},
@@ -39,8 +39,8 @@ public class Setup {
             {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
             {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
             {1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 , 1}
-        };
-        new GameModel();//redFile,blackFile);
+        };*/
+        new GameModel(redFile,blackFile); //these files need to come from tournment/home screen
         //Board b = new Board(multi,30);
     }
     

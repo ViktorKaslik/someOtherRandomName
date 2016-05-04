@@ -72,6 +72,12 @@ class Board {
         
     }
     
+    /**
+     * redraws the board and refreshes it 
+     * @param A the matrix to draw
+     * @param size of tiles
+     * @param ants the hashmap of ants to be drawn
+     */
     public void refresh(int[][] A, int size, HashMap<Integer,Ant> ants){
         board = buildBoard(A, size, ants);
         frame.add(board);
@@ -118,6 +124,13 @@ class Board {
         return pan;
     }
     
+    /**
+     * checks if an ant is on tile x,y
+     * @param x
+     * @param y
+     * @param ants
+     * @return 
+     */
     public Ant isAntAt(int x, int y, HashMap<Integer,Ant> ants){
         Ant ant;
         for (Map.Entry<Integer, Ant> entry : ants.entrySet())
@@ -144,6 +157,12 @@ class Board {
         return label;
     }
     
+    /**
+     * gets the image of an ant (don't belive its used as tiles are to small)
+     * @param j
+     * @param dir
+     * @return 
+     */
     public JLabel getAntImg(int j,int dir){
         JLabel label=new JLabel();
         

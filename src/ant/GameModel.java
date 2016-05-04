@@ -30,8 +30,14 @@ public class GameModel {
     private int round;
     public int winner;
     
-    public GameModel(/*File redF, File blackF*/){
-        winner = -1;
+    /** 
+     * This class is used to run the game. All the rules of the 
+     * game are contained and maintained within this class
+     * @param redF Is the text file that contains the brain for the red ant
+     * @param blackF Is the text file that contains the brain for the black ant
+     */
+    public GameModel(File redF, File blackF){
+        winner = -1; //-1 means ther is no winner i.e. draw
         tileSize = 5;
         round = 300000;
         ants = new HashMap<Integer,Ant>();
@@ -69,7 +75,7 @@ public class GameModel {
     }
     
     /**
-     * Creates a MarkerBoard where each cell on the board corrosponds to a cell on the marker board
+     * Creates a MarkerBoard where each cell on the board corresponds to a cell on the marker board
      */
     public void senseSetup(){
         int height = boardModel.length;
@@ -82,6 +88,12 @@ public class GameModel {
         }
     }
     
+    /**
+     * This function is used to load the brain files,
+     * It passes the files to the Brain class which turns them into a FSA
+     * @param redF
+     * @param blackF 
+     */
     public void loadBrains(File redF, File blackF){
         try {
             brains = new Brains(redF,blackF);
@@ -90,6 +102,10 @@ public class GameModel {
         }
     }
     
+    /**
+     * This function runs the game. It keeps track of the number of rounds played.
+     * It also refreshes the GUI once every 50 rounds
+     */
     public void playRounds(){
         while(round !=0){
             if(round % 50 == 0){
@@ -101,9 +117,15 @@ public class GameModel {
             }
             round--;
         }
-        int winner = calcWinner();
+        winner = calcWinner();
     }
     
+    /**
+     * This function counts the number of food on each anthill.
+     * it then returns 0 if the red ants have more food, a 1 if black ants have more food
+     * or -1 if there is no winner i.e. a draw
+     * @return winner
+     */
     public int calcWinner(){
         int red=0;
         int black = 0;
@@ -128,6 +150,11 @@ public class GameModel {
         return -1;
     }
     
+    /**
+     * This function gets the winner value. It then returns 0 if the red ants have more food, a 1 if black ants have more food
+     * or -1 if there is no winner i.e. a draw
+     * @return winner
+     */
     public int getWinner(){ return winner; }
     
     /**
@@ -165,20 +192,60 @@ public class GameModel {
      */
     public int State(Ant ant){return ant.getState();}
     
+    /**
+     * gets the colour of the ant
+     * @param ant the ant to get colour of
+     * @return the colour of the ant (0 if red 1 if black)
+     */
     public int colour(Ant ant){return ant.getColor();}
     
+    /**
+     * gets the number of rounds that the ant needs to rest for before next move
+     * @param ant the ant to get resting from
+     * @return number of turns left
+     */
     public int resting(Ant ant){return ant.getResting();}
     
+    /**
+     * gets the direction that the ant is facing
+     * @param ant to get info of
+     * @return an int 0-5 which relates to the ants direction
+     */
     public int direction(Ant ant){return ant.getDirection();}
     
+    /**
+     * does ant have food
+     * @param ant ant in question
+     * @return true if ant has food false otherwise 
+     */
     public boolean has_Food(Ant ant){return ant.HasFood();}
     
+    /**
+     * sets the state of the ant to state 
+     * @param ant
+     * @param state 
+     */
     public void set_state(Ant ant,int state){ant.setState(state);}
     
+    /**
+     * sets the resting value of ant to rest 
+     * @param ant
+     * @param rest 
+     */
     public void set_resting(Ant ant, int rest){ant.setResting(rest);}
     
+    /**
+     * sets the direction of ant to dir
+     * @param ant
+     * @param dir 
+     */
     public void set_direction(Ant ant, int dir){ ant.setDirection(dir);}
     
+    /**
+     * sets ant has food to bool
+     * @param ant
+     * @param bool 
+     */
     public void set_has_food(Ant ant, boolean bool){ ant.setHasFood(bool);}
     
     /**
@@ -359,20 +426,49 @@ public class GameModel {
         ant.setCoord(x, y);
     }
     
+    /**
+     * sets the marker at tile x,y to marker for the ants of colour color
+     * @param x
+     * @param y
+     * @param color
+     * @param marker 
+     */
     public void set_marker_at(int x, int y, int color, int marker){
         markerModel[y][x].placeMarker(color, marker);
     }
     
+    /**
+     * clears the color marker 'marker' from tile x,y
+     * @param x
+     * @param y
+     * @param color
+     * @param marker 
+     */
     public void clear_marker_at(int x, int y, int color, int marker){
         markerModel[y][x].removeMarker(color, marker);
     }
     
+    /**
+     * checks if there is a marker is at tile x,y for color ants
+     * @param x
+     * @param y
+     * @param color
+     * @param marker
+     * @return 
+     */
     public boolean check_marker_at(int x, int y, int color, int marker){
         if(markerModel[y][x].getMarker(color, marker) > 0)
             return true;
         return false;
     }
     
+    /**
+     * checks if there is any marker belonging to colour 'color' ants at tile x,y
+     * @param x
+     * @param y
+     * @param color
+     * @return 
+     */
     public boolean check_any_marker_at(int x, int y, int color)
     {
         for(int i=0; i<5; i++){
@@ -381,6 +477,15 @@ public class GameModel {
         }
         return false;
     }
+    
+    /**
+     * if condition is true, move to st1 else st2
+     * @param ant
+     * @param dir
+     * @param st1
+     * @param st2
+     * @param cond 
+     */
     public void sense(Ant ant, int dir, int st1, int st2, int cond){
         int[] coord = ant.getCoord();
         if(dir == 0){// here
@@ -463,6 +568,10 @@ public class GameModel {
         }
     }
     
+    /**
+     * checks that cell in front is not rocky, if not rocky ant moves to cell
+     * @param ant 
+     */
     public void move(Ant ant){
         int[] coord = ant.getCoord();
         int[] cellCoord = adjacent_cell(coord[0],coord[1],ant.getDirection());
@@ -472,12 +581,21 @@ public class GameModel {
         }
     }
     
+    /**
+     * generates a random number between 0-p
+     * @param p
+     * @return 
+     */
     public int flip(int p){
         Random randomGenerator = new Random();
         return randomGenerator.nextInt(p);
         
     }
     
+    /**
+     * gets and carries out the instruction from the ant brains FSA
+     * @param ant 
+     */
     public void get_instruction(Ant ant){
         String[] instruction = brains.getInstruction(ant.getState(), ant.getColor());
         //process instruction and call relevent instructions
@@ -595,6 +713,7 @@ public class GameModel {
                
         }
     }
+    
     /*
         sensed_cell(p:pos, d:dir, sd:sense_dir):pos
         

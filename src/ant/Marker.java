@@ -14,7 +14,13 @@ class Marker {
      private int[] black;
      private int food;
      
-   public Marker(){
+    /**
+    * There is a marker for every cell, 
+    * the marker contains information about 
+    * which markers have been placed on a cell
+    * and quantity of food on a cell
+    */
+    public Marker(){
        food = 0;
         red = new int[5];
         black = new int[5];
@@ -24,6 +30,12 @@ class Marker {
         }
     }
 
+    /**
+     * gets the value of marker 'marker' for ants of colour 'colour'
+     * @param colour
+     * @param marker
+     * @return 1 if marker is present else 0
+     */
     public int getMarker(int colour, int marker){
         if(colour == 0){
             return red[marker];
@@ -33,6 +45,11 @@ class Marker {
         return -1;
     }
     
+    /**
+     * sets marker 'marker' for ant of colour 'colour' to 1
+     * @param colour
+     * @param marker 
+     */
     public void placeMarker(int colour, int marker) {
         if(colour == 0){
             red[marker] = 1;
@@ -41,6 +58,11 @@ class Marker {
         }
     }
 
+    /**
+     * sets marker 'marker' for ant of colour 'colour' to 0
+     * @param colour
+     * @param marker 
+     */
    public void removeMarker(int colour, int marker) {
         if(colour == 0){
             red[marker] = 0;
@@ -48,10 +70,19 @@ class Marker {
             black[marker] = 0;
         }
    }
+   
+   /**
+    * gets the number of food 
+    * @return 
+    */
    public int getFood(){
        return food;
    }
    
+   /**
+    * sets number of food
+    * @param x 
+    */
    public void setFood(int x){
        food = x;
    }

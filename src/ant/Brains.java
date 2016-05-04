@@ -19,6 +19,12 @@ import java.util.List;
 public class Brains {
     private String [][] red, black;
     
+    /**
+     * checks brain files are well formed and converts them into FSA 
+     * @param redF red brain file
+     * @param blackF black brain file
+     * @throws Exception if either of the files isn't well formed or file cant be read
+     */
     public Brains(File redF, File blackF) throws Exception{
         for(int x=0; x<2; x++){
             File file;
@@ -48,7 +54,12 @@ public class Brains {
         
     }
     
-    
+    /**
+     * checks that file is well formed
+     * @param lines list of lines from file 
+     * @param ant ant to have the brain
+     * @throws Exception 
+     */
     private void parseBrain(List<String> lines, int ant) throws Exception{
         
         for(int x=0; x<lines.size(); x++){
