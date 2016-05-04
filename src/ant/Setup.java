@@ -40,7 +40,7 @@ public class Setup {
             {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1},
             {1,  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 , 1}
         };*/
-        new GameModel(redFile,blackFile); //these files need to come from tournment/home screen
+        new GameModel();//redFile,blackFile); //these files need to come from tournment/home screen
         //Board b = new Board(multi,30);
     }
     

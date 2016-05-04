@@ -30,6 +30,20 @@ public class GameModel {
     private int round;
     public int winner;
     
+    public GameModel(){
+        winner = -1; //-1 means ther is no winner i.e. draw
+        tileSize = 5;
+        round = 300000;
+        ants = new HashMap<Integer,Ant>();
+        modelGen boardGen = new modelGen();
+        boardModel = boardGen.getBoard();
+        //loadBrains(redF, blackF);
+        antSetup();
+        boardGui = new Board(boardModel,tileSize,ants); //draw board
+        senseSetup();
+        //refresh();
+    }
+    
     /** 
      * This class is used to run the game. All the rules of the 
      * game are contained and maintained within this class

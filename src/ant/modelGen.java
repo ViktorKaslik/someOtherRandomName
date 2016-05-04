@@ -242,13 +242,14 @@ public class modelGen {
         int yIn = randInt(1,height-1);
         int i=0;
         while(i < 14){
-            size = randInt(2,10);
-            while(rockIsClear(xIn,yIn, matrix,size) == false){
+            //size = randInt(2,10);
+            i++;
+            do{
                 xIn = randInt(1,width-1);
                 yIn = randInt(1,height-1);
-            }
-            
-            if(!rockAdjacentToRock(xIn,yIn,size,matrix)){i++;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
+            }while(rockIsClear(xIn,yIn, matrix,size) == false);
+            matrix[yIn][xIn]=1;
+            /*if(!rockAdjacentToRock(xIn,yIn,size,matrix)){i++;} //Fix the rock over rock issue (sometimes a larger rock is placed directly over a smaller rock)
             //i+=1;
             //System.out.println(yIn + " "+xIn + " "+i);
             //size = randInt(4,15);
@@ -256,7 +257,7 @@ public class modelGen {
                 for(int y=yIn; y<yIn+size; y++){
                     matrix[y][x]=1;
                 }
-            }
+            }*/
             //matrix[yIn][xIn] = 1;
         }
         
@@ -274,7 +275,7 @@ public class modelGen {
         boolean pass= true;
         int h = matrix.length;
         int w = matrix[1].length;
-        if(y+size+2 > h || y < 3){ return false;}
+        /*if(y+size+2 > h || y < 3){ return false;}
         if(x+size+2 > w || x < 3){ return false;}
         if(matrix[y][x] != 4){ return false;}
         
@@ -288,6 +289,15 @@ public class modelGen {
                 if(xx == x && yy == y){
                     if(matrix[yy][xx] == 1){pass=false;}
                 }
+            }
+        }*/
+        for(int xx = x-1; xx<=(x+1); xx++){
+            for(int yy = y-1; yy<=(y+1); yy++){
+                if(yy >=h || xx>=w){pass=false; break;}
+                if(matrix[yy][xx] == 2){ pass = false; }//red anthill
+                if(matrix[yy][xx] == 3){ pass = false; }//black anthill
+                if(matrix[yy][xx] > 4){ pass = false; } //food
+                
             }
         }
         return pass;
@@ -335,15 +345,15 @@ public class modelGen {
     }
     
       private boolean isValidRock(int x, int y, int[][] matrix){
-        boolean pass = false;  
+        boolean pass = true;  
             for(int i=0; i<6; i++){
                 int[] adCell = adjacent_cell(x,y,i);
-                if(matrix[adCell[1]][adCell[0]] == 1){
-                    pass = true;
-                }
-                if(matrix[adCell[1]][adCell[0]] == 4){
-                    pass = true;
-                }
+                if(matrix[adCell[1]][adCell[0]] != 1 || !(matrix[adCell[1]][adCell[0]] >= 4)){
+                    pass = false;
+                }/*
+                if(matrix[adCell[1]][adCell[0]] >= 4){
+                pass = true;
+                }*/
             }
         return pass;
     }
@@ -413,6 +423,7 @@ public class modelGen {
         int antHill=0;
         int dirt=0;
         int food = 0;
+        int rock = 0;
         for(int y=0; y<height;y++){
             for(int x=0; x<width; x++){
                 if(matrix[y][x] == 2 || matrix[y][x] == 3){//is ant hill
@@ -424,9 +435,12 @@ public class modelGen {
                 if(matrix[y][x] > 5){//is a cell of 5 food
                     food = food + (matrix[y][x]-4);
                 }
+                if(matrix[y][x] == 1){
+                    rock = rock+1;
+                }
             }
         }
-        return (antHill == 254 && dirt == 84 && food == 1375); //each ant hill should consist of 127 tiles
+        return (antHill == 254 && dirt == 84 && food == 1375 && rock == 14); //each ant hill should consist of 127 tiles
                                                //dirt surrounding an ant hill should = 42
     }
     
@@ -449,6 +463,9 @@ public class modelGen {
         return false;
     }
     
+    
+
+     
     /**
      * loads and converts world files to be used in game
      * @param file
@@ -509,6 +526,7 @@ public class modelGen {
         }
     }
 
+   
   
 
     
