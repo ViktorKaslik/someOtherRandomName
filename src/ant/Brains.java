@@ -17,7 +17,8 @@ import java.util.List;
  * @author vikto
  */
 public class Brains {
-    private String [][] red, black;
+    private String[][] red;
+    private String[][] black;
     
     /**
      * checks brain files are well formed and converts them into FSA 
@@ -204,13 +205,14 @@ public class Brains {
      * @return String array containing the instruction
      */
     public String[] getInstruction(int state, int colour){
+        System.out.println("size: " + red.length);
         String[] instruction= null;
         if(colour == 0){
             if(state < red.length){instruction = red[state];}
         }else{
             if(state < black.length){instruction = black[state];}
         }
-        
+        //System.out.println(colour + instruction[0]);
         return instruction;
     }
     //end of class

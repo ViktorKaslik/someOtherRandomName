@@ -109,9 +109,10 @@ public class Tournment {
                        temp = temp.replaceAll("[^\\d]", "");
                        buttons.get(Integer.parseInt(temp)-1).setText("Uploaded");
                     }     
-                    if(files.size()==numPlayers){
+                    System.out.println(files.size() + " "+ numPlayers);
+                    if(files.size()== numPlayers){
                         frame.remove(p);
-                        //p=;////////////////////;
+                        p=getWorldFiles();////////////////////;
                         frame.add(p,BorderLayout.CENTER);
                         frame.pack();
                     }
@@ -207,7 +208,7 @@ public class Tournment {
                     File blackFile= files.get(black);
                     GameModel gm = new GameModel(redFile, blackFile);
                     int winner = gm.getWinner();
-                    if(winner ==0){
+                    if(winner == 0){
                         score[red]=score[red]+1;
                     }else{
                         score[black]=score[black]+1;

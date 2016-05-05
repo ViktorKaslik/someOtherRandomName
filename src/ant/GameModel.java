@@ -42,6 +42,7 @@ public class GameModel {
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();
         //refresh();
+        playRounds();
         
     }
     
@@ -58,11 +59,12 @@ public class GameModel {
         ants = new HashMap<Integer,Ant>();
         modelGen boardGen = new modelGen();
         boardModel = boardGen.getBoard();
-        //loadBrains(redF, blackF);
+        loadBrains(redF, blackF);
         antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();
         
+        playRounds();
         //refresh();
     }
     
@@ -73,11 +75,12 @@ public class GameModel {
         ants = new HashMap<Integer,Ant>();
         modelGen boardGen = new modelGen(board);
         boardModel = boardGen.getBoard();
-        //loadBrains(redF, blackF);
+        loadBrains(redF, blackF);
         antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();
         
+        playRounds();
         //refresh();
     }
     
@@ -95,7 +98,7 @@ public class GameModel {
                 int cellVal = boardModel[y][x];
                 
                 if(cellVal == 2 || cellVal == 3){ //if cell = redAntHill
-                    Ant tempAnt = new Ant(count,cellVal-1);
+                    Ant tempAnt = new Ant(count,cellVal-2);
                     tempAnt.setCoord(x, y);
                     ants.put(count,tempAnt); //add  new ant to hashmap
                     count++;
@@ -439,11 +442,13 @@ public class GameModel {
         if(ant_is_alive(id)){
             Ant ant = ants.get(id);
             if(!check_for_surround_ant_at(ant)){
+                System.out.println(1);
                 if(ant.getResting() > 0){
                     ant.setResting(ant.getResting()-1);
                 }
                 else{
                     //getInstruction
+                    System.out.println(2);
                     get_instruction(ant);
                 }
             }
@@ -631,7 +636,9 @@ public class GameModel {
      * @param ant 
      */
     public void get_instruction(Ant ant){
+        System.out.println("instruct = "+ant.getState()+":"+ ant.getColor());
         String[] instruction = brains.getInstruction(ant.getState(), ant.getColor());
+        System.out.println(instruction[0]);
         //process instruction and call relevent instructions
         //maybe convert string into int code on parsing
         //ant.setResting(ant.getResting()-1);
