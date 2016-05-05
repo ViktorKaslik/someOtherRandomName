@@ -69,13 +69,16 @@ public class Brains {
             String line = lines.get(x);
             String[] temp = line.split(";");//remove comment (as its unrequired)
             line = temp[0];
-            //remove brackets and comma 
-            line.replace("(", " ");
-            line.replace(")", " ");
-            line.replace(",", " ");
-            line.replace("marker ","marker_"); // change marker i to marker_i
             /*remove the importance of caps (as they dont make much diff)*/
-            line = line.toLowerCase(); 
+            line = line.toLowerCase(); //make dislexic friendly :p
+            line = line.replace("marker ","marker_"); // change marker i to marker_i
+            //line.r
+            //remove brackets and comma 
+            line = line.replace("(", " ");
+            line = line.replace(")", " ");
+            line = line.replace(",", " ");
+            
+            
             String[] words = line.split(" "); //split the instruction into 'parts'
             
             switch(words[0]){
@@ -205,15 +208,25 @@ public class Brains {
      * @return String array containing the instruction
      */
     public String[] getInstruction(int state, int colour){
-        System.out.println("size: " + red.length);
+        //print();
         String[] instruction= null;
         if(colour == 0){
             if(state < red.length){instruction = red[state];}
         }else{
             if(state < black.length){instruction = black[state];}
         }
-        //System.out.println(colour + instruction[0]);
+        
         return instruction;
     }
     //end of class
+    
+    public void print(){
+        for(int x=0;x<red.length;x++){
+            String[] line = red[x];
+            for(int y=0; y<line.length; y++){
+                System.out.print(line[y] +" ");
+            }
+            System.out.print("\n");
+        }
+    }
 }

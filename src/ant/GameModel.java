@@ -142,7 +142,7 @@ public class GameModel {
      */
     public void playRounds(){
         while(round !=0){
-            if(round % 50 == 0){
+            if(round % 500 == 0){
                 refresh();
             }
             for(int i = 0; i<ants.size(); i++){
@@ -442,13 +442,13 @@ public class GameModel {
         if(ant_is_alive(id)){
             Ant ant = ants.get(id);
             if(!check_for_surround_ant_at(ant)){
-                System.out.println(1);
+                //System.out.println(1);
                 if(ant.getResting() > 0){
                     ant.setResting(ant.getResting()-1);
                 }
                 else{
                     //getInstruction
-                    System.out.println(2);
+                    //System.out.println(2);
                     get_instruction(ant);
                 }
             }
@@ -636,9 +636,9 @@ public class GameModel {
      * @param ant 
      */
     public void get_instruction(Ant ant){
-        System.out.println("instruct = "+ant.getState()+":"+ ant.getColor());
+        //System.out.println("instruct = "+ant.getState()+":"+ ant.getColor());
         String[] instruction = brains.getInstruction(ant.getState(), ant.getColor());
-        System.out.println(instruction[0]);
+        //System.out.println(instruction[0]);
         //process instruction and call relevent instructions
         //maybe convert string into int code on parsing
         //ant.setResting(ant.getResting()-1);
@@ -743,7 +743,7 @@ public class GameModel {
                     if(instruction[1].equals("left")){lr = 'l';}
                     else{lr='r';}
                     turn(ant,lr);
-                    ant.setState(Integer.parseInt(instruction[1]));
+                    ant.setState(Integer.parseInt(instruction[2]));
                     break;
                 case("flip"):
                     //Flip(p,st1,st2)
