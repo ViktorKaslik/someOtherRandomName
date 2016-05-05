@@ -28,7 +28,7 @@ public class GameModel {
     private HashMap<Integer,Ant> ants;
     private Brains brains;
     private int round;
-    public int winner;
+    private int winner;
     
     public GameModel(){
         winner = -1; //-1 means ther is no winner i.e. draw
@@ -42,6 +42,7 @@ public class GameModel {
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();
         //refresh();
+        
     }
     
     /** 
@@ -61,6 +62,22 @@ public class GameModel {
         antSetup();
         boardGui = new Board(boardModel,tileSize,ants); //draw board
         senseSetup();
+        
+        //refresh();
+    }
+    
+     public GameModel(File redF, File blackF,File board) throws Exception{
+        winner = -1; //-1 means ther is no winner i.e. draw
+        tileSize = 5;
+        round = 300000;
+        ants = new HashMap<Integer,Ant>();
+        modelGen boardGen = new modelGen(board);
+        boardModel = boardGen.getBoard();
+        //loadBrains(redF, blackF);
+        antSetup();
+        boardGui = new Board(boardModel,tileSize,ants); //draw board
+        senseSetup();
+        
         //refresh();
     }
     
@@ -283,7 +300,10 @@ public class GameModel {
      */
     public int food_at(int x, int y){
         //tile 5 = 1 food 
-        return boardModel[y][x]-4;
+        if(boardModel[y][x]-4 > markerModel[y][x].getFood())
+            return boardModel[y][x]-4;
+        else
+            return markerModel[y][x].getFood();
     }
     
     /**
@@ -293,7 +313,7 @@ public class GameModel {
      * @param food the number of food particles 
      */
     public void set_food_at(int x, int y, int food){
-        if(boardModel[y][x] == 2 && boardModel[y][x] == 3){
+        if(boardModel[y][x] != 2 && boardModel[y][x] != 3){
             boardModel[y][x] = food+4;
         }
         markerModel[y][x].setFood(food);

@@ -33,8 +33,11 @@ public class modelGen {
      * has been produced in a text file
      * @param file 
      */
-    public modelGen(File file){
+    public modelGen(File file) throws Exception{
         boardModel = loadWorld(file);
+        if(!isValidWorld(boardModel)){//if world is not valid throw error
+            throw new Exception("Invalid file");
+        }
     }
     
     /**
@@ -379,8 +382,7 @@ public class modelGen {
      * @return true if valid else false
      */
     public boolean isValidWorld(int[][] matrix){
-        boolean isValid;
-        isValid = false;
+        boolean isValid = false;
         isValid = isBoarderValid(matrix);
         if(!isValid){return false;}
         isValid = isAntHillValid(matrix);
@@ -424,8 +426,8 @@ public class modelGen {
         int dirt=0;
         int food = 0;
         int rock = 0;
-        for(int y=0; y<height;y++){
-            for(int x=0; x<width; x++){
+        for(int y=1; y<height-1;y++){//1-->height-1 to remove borders
+            for(int x=1; x<width-1; x++){
                 if(matrix[y][x] == 2 || matrix[y][x] == 3){//is ant hill
                     antHill += 1;
                 }
@@ -440,7 +442,8 @@ public class modelGen {
                 }
             }
         }
-        return (antHill == 254 && dirt == 84 && food == 1375 && rock == 14); //each ant hill should consist of 127 tiles
+        System.out.println(rock);
+        return (antHill == 254 && dirt == 338 && food == 1375  && rock == 14); //each ant hill should consist of 127 tiles
                                                //dirt surrounding an ant hill should = 42
     }
     

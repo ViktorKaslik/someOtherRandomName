@@ -9,7 +9,7 @@ package ant;
  *
  * @author vikto
  */
-class Marker {
+public class Marker {
      private int[] red;
      private int[] black;
      private int food;
@@ -21,7 +21,7 @@ class Marker {
     * and quantity of food on a cell
     */
     public Marker(){
-       food = 0;
+        food = 0;
         red = new int[5];
         black = new int[5];
         for(int i=0; i<5; i++){

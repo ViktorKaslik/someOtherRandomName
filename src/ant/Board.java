@@ -31,13 +31,14 @@ class Board {
     private ImageIcon[] imgA;
     private ImageIcon[] antsIm;
     
-    int height;
-    int width;
-    int imgW;
-    double ratio;
-    int imgH;
-    int buff;
-    int buffer;
+    //this feels dirty, but didn't have time to tidy up
+    private int height;
+    private int width;
+    private int imgW;
+    private double ratio;
+    private int imgH;
+    private int buff;
+    private int buffer;
     /**
      * Draws the board 
      * @param A a 2d int array representing the world
@@ -194,33 +195,7 @@ class Board {
         }
     }
     
-    /*public void readAntImg(int size){
     
-    try {
-    //make dynamic
-    
-    img = ImageIO.read(Setup.class.getResource("Ants.png"));
-    //ImageIcon icon = new ImageIcon(img2);
-} catch (IOException e) { }
-for(int x = 1; x<= 4;x++){
-int k = 0;
-if(x>1){
-k = 143*(x-1);
-}
-Image img2=img.getSubimage(0+k,0,143,164);
-ImageIcon imageIcon = new ImageIcon(img2);
-
-//imgA[x]= new ImageIcon(img2);
-antsIm[x]= resize(imageIcon,size);
-}
-}*/
-    
-    /**
-     * Alters the size of image icon
-     * @param icon takes an ImageIcon 
-     * @param size takes an int that relates to the desired size of the image
-     * @return ImageIcon returns the resized image
-     */
     public ImageIcon resize(ImageIcon icon,int size){
         int widthResize= size;
         int heightResize= size;
@@ -231,5 +206,32 @@ antsIm[x]= resize(imageIcon,size);
         ImageIcon newIcon = new ImageIcon(buf);
         return newIcon;
     }
+    
+    /*public void readAntImg(int size){
+    try {
+    //make dynamic
+    
+    img = ImageIO.read(Setup.class.getResource("Ants.png"));
+    //ImageIcon icon = new ImageIcon(img2);
+    } catch (IOException e) { }
+    for(int x = 1; x<= 4;x++){
+    int k = 0;
+    if(x>1){
+    k = 143*(x-1);
+    }
+    Image img2=img.getSubimage(0+k,0,143,164);
+    ImageIcon imageIcon = new ImageIcon(img2);
+
+    //imgA[x]= new ImageIcon(img2);
+    antsIm[x]= resize(imageIcon,size);
+    }
+    }*/
+
+    /**
+     * Alters the size of image icon
+     * @param icon takes an ImageIcon 
+     * @param size takes an int that relates to the desired size of the image
+     * @return ImageIcon returns the resized image
+     */
     
 }
